@@ -30,12 +30,14 @@ if sys.version_info[:2] == (2, 6):
     requires.append('argparse>=1.4')
 
 setup(
-    name = "cfncluster-node",
+    name = "cfncluster-node-fork_hcluster",
     version = version,
     author = "Dougal Ballantyne",
     author_email = "dougalb@amazon.com",
-    description = ("cfncluster-node provides the scripts for a cfncluster node."),
-    url = ("https://github.com/awslabs/cfncluster"),
+    maintainer = "Oleksandr Shcherbakov",
+    maintainer_email = "admin@sp06n.org.ua",
+    description = ("cfncluster-node-fork_hcluster is a fork from cfncluster-node to provide aa support for heterogenous clusters. cfncluster-node provides the scripts for a cfncluster node."),
+    url = ("https://github.com/f403/cfncluster-node-fork_hcluster"),
     license = "Amazon Software License",
     packages = find_packages(),
     install_requires = requires,
@@ -45,9 +47,9 @@ setup(
     package_data = {
         '' : ['examples/config'],
     },
-    long_description = ("cfncluster-node is the python package installed on the Amazon EC2 instances launched as part of CfnCluster."),
+    long_description = ("cfncluster-node-fork_hcluster is a fork from cfncluster-node to provide aa support for heterogenous clusters. cfncluster-node is the python package installed on the Amazon EC2 instances launched as part of CfnCluster."),
     classifiers=[
-        "Development Status :: 5 - Production/Stable",
+        "Development Status :: 3 - Alpha",
         "Environment :: Console",
         "Programming Language :: Python",
         "Topic :: Scientific/Engineering",
