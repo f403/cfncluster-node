@@ -31,7 +31,7 @@ def __runSgeCommand(command):
     except sub.CalledProcessError:
         log.error("Failed to run %s\n" % _command)
 
-def addHost(hostname, cluster_user, slots):
+def addHost(hostname, cluster_user, slots, queue=None):
     log.info('Adding %s with %s slots' % (hostname,slots))
 
     # Adding host as administrative host
@@ -103,20 +103,35 @@ report_variables      NONE
     command = ('/opt/sge/bin/lx-amd64/qconf -aattr hostgroup hostlist %s @allhosts' % hostname)
     __runSgeCommand(command)
 
+    # Add the host to the custom queue
+    if queue:
+        command = ('/opt/sge/bin/lx-amd64/qconf -aattr hostgroup hostlist %s @%shosts' % (hostname,queue))
+        __runSgeCommand(command)
+
+
     # Set the numbers of slots for the host
     command = ('/opt/sge/bin/lx-amd64/qconf -aattr queue slots ["%s=%s"] all.q' % (hostname,slots))
     __runSgeCommand(command)
+    if queue:
+        command = ('/opt/sge/bin/lx-amd64/qconf -aattr queue slots ["%s=%s"] %s.q' % (hostname,slots,queue))
+        __runSgeCommand(command)
 
-def removeHost(hostname,cluster_user):
+def removeHost(hostname,cluster_user, queue=None):
     log.info('Removing %s', hostname)
 
     # Purge hostname from all.q
     command = ("/opt/sge/bin/lx-amd64/qconf -purge queue '*' all.q@%s" % hostname)
     __runSgeCommand(command)
+    if queue:
+        command = ("/opt/sge/bin/lx-amd64/qconf -purge queue '*' %s.q@%s" % (queue,hostname))
+        __runSgeCommand(command)
 
     # Remove host from @allhosts group
     command = ("/opt/sge/bin/lx-amd64/qconf -dattr hostgroup hostlist %s @allhosts" % hostname)
     __runSgeCommand(command)
+    if queue:
+        command = ("/opt/sge/bin/lx-amd64/qconf -dattr hostgroup hostlist %s @%shosts" % (hostname,queue))
+        __runSgeCommand(command)
 
     # Removing host as execution host
     command = ("/opt/sge/bin/lx-amd64/qconf -de %s" % hostname)

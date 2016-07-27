@@ -114,7 +114,7 @@ def __writeNodeList(node_list):
     os.chmod(_config, 0744)
 
 
-def addHost(hostname, cluster_user, slots):
+def addHost(hostname, cluster_user, slots, queue=None):
     log.info('Adding %s' % hostname)
 
     # Get the current node list
@@ -122,6 +122,8 @@ def addHost(hostname, cluster_user, slots):
 
     # Add new node
     node_list['compute'].append(hostname)
+    if queue and queue in node_list.keys():
+        node_list[queue].append(hostname)
     __writeNodeList(node_list)
 
     # Restart slurmctl locally
@@ -136,14 +138,19 @@ def addHost(hostname, cluster_user, slots):
     __runCommand(command)
 
 
-def removeHost(hostname, cluster_user):
+def removeHost(hostname, cluster_user, queue=None):
     log.info('Removing %s', hostname)
 
     # Get the current node list
     node_list = __readNodeList()
 
     # Remove node
-    node_list['compute'].remove(hostname)
+    # node_list['compute'].remove(hostname)
+    for k,v in node_list.iteritems():
+        try:
+            v.remove(hostname)
+        except ValueError:
+            pass
     __writeNodeList(node_list)
 
     # Restart slurmctl
