@@ -121,9 +121,10 @@ def addHost(hostname, cluster_user, slots, queue=None):
     node_list = __readNodeList()
 
     # Add new node
-    node_list['compute'].append(hostname)
     if queue and queue in node_list.keys():
         node_list[queue].append(hostname)
+    else:
+        node_list['compute'].append(hostname)
     __writeNodeList(node_list)
 
     # Restart slurmctl locally
