@@ -102,7 +102,7 @@ def __writeNodeList(node_list):
                         new_file.write("#NodeName= Procs=1 State=UNKNOWN\n")
                     items = partitions.split(' ')
                     node_line = items[1].split('=')
-                    new_file.write(items[0] + " " + node_line[0] + '=dummy-' + partition + ',' + ','.join(node_list[partition]) + " " + ' '.join(items[2:]))
+                    new_file.write(items[0] + " " + node_line[0] + '=dummy-' + partition + '[0-99],' + ','.join(node_list[partition]) + " " + ' '.join(items[2:]))
                 else:
                     new_file.write(line)
     os.close(fh)
